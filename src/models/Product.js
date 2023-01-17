@@ -7,8 +7,14 @@ const ProductSchema = new Schema({
     brand: {
         type: String,
     },
+    outstanding: {
+        type: Boolean,
+    },
     price: {
         type: Number,
+    },
+    stock: {
+        type: String,
     },
     type: {
         type: mongoose.Schema.Types.ObjectId,
