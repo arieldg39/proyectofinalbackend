@@ -21,6 +21,9 @@ const ProductSchema = new Schema({
         type: String,
         require: true,
     },
+    outstanding: {
+        type: Boolean,
+    },
     price: {
         type: Number,
         require: true,
@@ -33,6 +36,9 @@ const ProductSchema = new Schema({
     stock: {
         type: Number,
         require: true,
+    },
+    stock: {
+        type: String,
     },
     type: {
         type: mongoose.Schema.Types.ObjectId,
