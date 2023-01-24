@@ -7,8 +7,9 @@ const ProductSchema = new Schema(
       required: true,
     },
     image: {
-      type: String,
-      required: true,
+      img1: String,
+      img2: String,
+      img3: String,
     },
     name: {
       type: String,
@@ -35,10 +36,6 @@ const ProductSchema = new Schema(
       type: Number,
       required: true,
     },
-    // type: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "ProductsType",
-    // },
   },
   {
     versionKey: false,
