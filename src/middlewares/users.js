@@ -3,8 +3,8 @@ const User = require("../models/User");
 
 const createUsersValidations = async(req, res, next)=>{
     try {        
-        const {password, repipassword, email,  name} = req.body;    
-        if(!password || !repipassword || !email || !name)
+        const {password, repipassword, email,  nombre, apellido} = req.body;    
+        if(!password || !repipassword || !email || !nombre || !apellido)
         return res.status(400).json({message: "Completar los Datos", tipoerror: "error"});
         
         if(password!=repipassword){        
