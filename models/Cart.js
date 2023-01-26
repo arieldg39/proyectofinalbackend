@@ -1,4 +1,4 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema, default:mongoose } = require("mongoose");
 
 const CartSchema = new Schema({
     owner: {
@@ -16,7 +16,7 @@ const CartSchema = new Schema({
                 default: 1,
             },     
             _id: false     
-        }, 
+        } 
     ]
 },{
     versionKey: false
