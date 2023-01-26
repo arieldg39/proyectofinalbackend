@@ -17,7 +17,11 @@ const CartSchema = new Schema({
             },     
             _id: false     
         }, 
-    ]
+    ],
+    deleted: {
+        type: Boolean,
+        default: false,
+    }
 },{
     versionKey: false
 })
