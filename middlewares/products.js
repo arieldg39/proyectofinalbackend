@@ -3,14 +3,14 @@ const ProductsType = require("../models/ProductsType");
 
 const addProductMiddleware = async (req, res, next) => {
     try {
-        const { name, brand, price, image, hotItem, stock, type } = req.body;
-        if (!type) return res.status(400).json({ message: "El campo type es requerido" });
+        const { image, name, brand, price, hotItem, stock, type } = req.body;
+        if (!image) return res.status(400).json({ message: "El campo image es requerido" });
         if (!name) return res.status(400).json({ message: "El campo name es requerido" });
         if (!brand) return res.status(400).json({ message: "El campo brand es requerido" });
         if (!price) return res.status(400).json({ message: "El campo price es requerido" });
-        if (!image) return res.status(400).json({ message: "El campo image es requerido" });
         if (!hotItem) return res.status(400).json({ message: "El campo hot item es requerido" });
         if (!stock) return res.status(400).json({ message: "El campo stock es requerido" });
+        if (!type) return res.status(400).json({ message: "El campo type es requerido" });
         const typeFound = await ProductsType.findById(type);
         if (!typeFound) return res.status(400).json({ message: "El tipo de producto no existe" });
         next();

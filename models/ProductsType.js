@@ -8,6 +8,4 @@ const ProductsTypeSchema = new Schema({
     versionKey: false
 })
 
-const ProductsType = model('ProductsType', ProductsTypeSchema);
-
-module.exports = ProductsType;
+module.exports = model('ProductsType', ProductsTypeSchema);
