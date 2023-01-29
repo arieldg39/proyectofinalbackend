@@ -3,10 +3,10 @@ const Cart = require("../models/Cart");
 const createCart = async (req, res) => {
     try {
         const { product, quantity } = req.body;
-        const cartFound = await Cart.findOne({ owner: req.userId })        
+        const cartFound = await Cart.findOne({ owner: req.userId})        
         if(!cartFound) {
             const payload = {                
-                    ...req.body                
+                ...req.body                
             }
             console.log(payload);
             const cart = new Cart(payload);
@@ -31,7 +31,6 @@ const createCart = async (req, res) => {
             { new: true }
             );
         return res.status(200).json({ message: "Carrito creado correctamente", updatedCart})
-
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message })
     }
