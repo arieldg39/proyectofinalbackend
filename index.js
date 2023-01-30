@@ -4,6 +4,8 @@ const app = express();
 dotenv.config();
 const cors = require("cors");
 const products = require("./routes/products");
+const user = require("./routes/user");
+const cart = require("./routes/cart");
 const connectDb = require("./Db/connectDb");
 connectDb();
 app.use(express.json());
