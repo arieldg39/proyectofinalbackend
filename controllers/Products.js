@@ -1,4 +1,3 @@
-const { deleteOne } = require("../models/Product");
 const Product = require("../models/Product");
 const ProductsType = require("../models/ProductsType");
 
