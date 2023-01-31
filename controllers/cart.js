@@ -64,11 +64,13 @@ const deleteProduct = async (req, res) => {
 }
 
 const getCart = async (req, res) => {
+    console.log(req.userId);
     try {
-        const cartFound = await Cart.findOne( { owner: req.userId })
+        const cartFound = await Cart.findOne( { userid: req.userId })
         if (!cartFound) {
-            res.status(400).json({ message: "El usuario no tiene carritos activos" })
-        }
+            return res.status(400).json({ message: "El usuario no tiene carritos activos" })
+        }        
+        
         return res.status(200).json({ message: "Carrito conseguidoexitosamente", cart: cartFound})
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message })        

@@ -20,7 +20,7 @@ const decoToken = (req, res, next) =>{
         req.userId = user.id;
         next();
     } catch (error) {
-        if (error.message === 'jwt expired') return res.status(401).json({ message: 'Token expirado, por favor logearse nuevamente', icon:"error", tipoerror:"tokenexp" });
+        if (error.message === 'jwt expired') return res.status(401).json({ message: 'Token expirado, por favor Logearse nuevamente', icon:"error", tipoerror:"tokenexp" });
     }
 }
 
