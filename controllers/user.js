@@ -35,9 +35,9 @@ const authUser =  async(req, res) =>{
     try {
         const {email, password} = req.body;
         const userFound = await User.findOne({email}).select('-__V');
-        if(!userFound) return res.status(400).json({message: "Datos ingresados son incorrecto!!!", icon: "error"});
+        if(!userFound) return res.status(400).json({message: "Email ingresado no esta Resgistrado, favor de Registarce!!!", icon: "error", tipoerror:"noregister"});
         const logInSucced = await bcryptjs.compare(password, userFound?.password);
-        if(!logInSucced) return res.status(400).json({message: "Datos ingresados son incorrecto!!!", icon: "error"});
+        if(!logInSucced) return res.status(400).json({message: "Datos ingresados son incorrecto!!!", icon: "error", tipoerror:"datosmal"});
         const userLogged = {
             nombre: userFound.nombre,
             email: userFound.email,
