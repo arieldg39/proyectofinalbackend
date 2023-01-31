@@ -2,8 +2,10 @@ const Product = require("../models/Product");
 
 const getProducts = async (req, res) => {
   try {
-    const allProducts = await Product.find();
-    res.status(200).json({ message: 'Listado Prodocto', allProducts});
+    const limit = req.query.limit || 15;
+    const page = req.query.page || 1;
+    const allProducts = await Product.paginate({},{limit, page});
+    res.send(allProducts);
   } catch (error) {
     res.status(500).send(error)
   }
