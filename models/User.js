@@ -1,4 +1,4 @@
-const { model, Schema } = require('mongoose');
+const { model, Schema, default: mongoose } = require('mongoose');
 
 const UserSchema = new Schema({
     nombre: {
@@ -31,10 +31,10 @@ const UserSchema = new Schema({
     type :{
         type: String,
     },
-    walletBalance: {
-        type: Number,
-        default: 0,
-    },
+    /*cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart"
+    },*/
     createAt: {
         type: Date,
         default: Date.now(),
