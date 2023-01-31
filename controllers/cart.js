@@ -31,7 +31,9 @@ const createCart = async (req, res) => {
                 id_cart=cartItem._id;
             })            
             const cartUpdate = await Cart.findByIdAndUpdate(id_cart,{ quantity: quantityNew }, { new: true });
-            return res.status(200).json({ message: "Cantidad Modificada!!!", cartUpdate});
+            const cartLeng = await Cart.findOne({ userid: userid}).count.length;
+            
+            return res.status(200).json({ message: "Cantidad Modificada!!!", cartUpdate, cantProd: cartLeng});
         }
         
     } catch (error) {
