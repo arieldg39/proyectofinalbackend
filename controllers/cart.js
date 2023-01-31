@@ -3,7 +3,7 @@ const Cart = require("../models/Cart");
 const createCart = async (req, res) => {
     try {
         const { product, quantity } = req.body;
-        const cartFound = await Cart.findOne({ owner: req.userId})        
+        const cartFound = await Cart.findOne({ userid: req.userId})        
         if(!cartFound) {
             const payload = {                
                 ...req.body                
