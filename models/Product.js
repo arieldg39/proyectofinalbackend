@@ -21,8 +21,7 @@ const ProductSchema = new Schema(
       type: Number,
     },
     hotItem: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     stock: {
       type: Number,
