@@ -1,10 +1,10 @@
-const ProductsType = require('./../models/ProductsType');
+const ProductsType = require('../models/ProductsType');
 
 const createTypes = async (req, res) => {
     try {
         const type = new ProductsType(req.body);
         await type.save();
-        res.status(200).json({ message: 'Tipo de producto creado exitosamente', type });
+        return res.status(200).json({ message: 'Tipo de producto creado exitosamente', type });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createTypes, editTypes, deleteTypes } = require('../controllers/ProductsType');
+const { createTypes, editTypes, deleteTypes } = require('../controllers/productsType');
 
 
 router.post('/',createTypes);
