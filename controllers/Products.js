@@ -12,6 +12,19 @@ const getProducts = async (req, res) => {
   }
 };
 
+
+const getOneProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) return res.status(404).json({ message: "Producto no encontrado" });
+    res.status(200).json({ product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 const getHotItem = async (req, res) => {
   try {
     const hotItem = await Product.find({ hotItem: "true" });
@@ -67,5 +80,6 @@ module.exports = {
   addProduct,
   editProduct,
   deleteProduct,
-  getHotItem
+  getHotItem,
+  getOneProduct
 };
