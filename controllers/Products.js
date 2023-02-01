@@ -41,7 +41,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const featuredProducts = async(req, res) =>{
+const hotItem = async(req, res) =>{
   try {
       const produtDes = await Product.find({hotItem: true}).select('stock');
       res.status(200).json({ feature:produtDes });
@@ -54,5 +54,5 @@ module.exports = {
   addProduct,
   editProduct,
   deleteProduct,
-  featuredProducts
+  hotItem
 };

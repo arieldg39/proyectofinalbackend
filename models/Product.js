@@ -21,14 +21,13 @@ const ProductSchema = new Schema(
       type: Number,
     },
     hotItem: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     stock: {
       type: Number,
     },
     type: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'ProductsType',
   },
   },
