@@ -3,10 +3,21 @@ const ProductsType = require("../models/ProductsType");
 
 const getProducts = async (req, res) => {
   try {
-    const allProducts = await Product.find();
+    const limit = req.query.limit || 15;
+    const page = req.query.page || 1;
+    const allProducts = await Product.paginate({}, { limit, page });
     res.send(allProducts);
   } catch (error) {
     res.status(500).send(error)
+  }
+};
+
+const getHotItem = async (req, res) => {
+  try {
+    const hotItem = await Product.find({ hotItem: "true" });
+    res.status(200).json({ hotItem });
+  } catch (error) {
+    res.status(error.code || 500).json({ message: error.message });
   }
 };
 
@@ -26,7 +37,7 @@ const addProduct = async (req, res) => {
       await newProduct.save();
       res.status(200).json({ message: 'Producto creado correctamente', product:newProduct });
   } catch (error) {
-      res.status(error.code || 500).json({ message: error.message });
+    res.status(error.code || 500).json({ message: error.message });
   }
 };
 
@@ -37,7 +48,7 @@ const editProduct = async (req, res) => {
       const updatedProduct = await Product.findByIdAndUpdate(id, {...req.body,type:type._id});
       res.status(200).json({ message: 'Producto actualizado correctamente', product: updatedProduct });
   } catch (error) {
-      res.status(error.code || 500).json({ message: error.message });
+    res.status(error.code || 500).json({ message: error.message });
   }
 };
 
@@ -47,7 +58,7 @@ const deleteProduct = async (req, res) => {
       await Product.deleteOne({ _id: id });
       res.status(200).json({ message: 'Producto borrado exitosamente' });
   } catch (error) {
-      res.status(error.code || 500).json({ message: error.message });
+    res.status(error.code || 500).json({ message: error.message });
   }
 };
 
@@ -55,5 +66,6 @@ module.exports = {
   getProducts,
   addProduct,
   editProduct,
-  deleteProduct
+  deleteProduct,
+  getHotItem
 };
