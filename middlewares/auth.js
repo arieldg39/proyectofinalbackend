@@ -15,6 +15,7 @@ const verifyJwt = (req, res, next) =>{
 const decoToken = (req, res, next) =>{
     try {
         const token = req.header('Authorization');
+        console.log(token);
         if (!token) return res.status(401).json({ message: 'Token no encontrado' , icon:"error", tipoerror:"tokenno"})
         const { user } = jwt.verify(token, process.env.SECRET_WORD);
         req.userId = user.id;

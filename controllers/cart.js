@@ -4,25 +4,28 @@ const createCart = async (req, res) => {
     try {
         let quantityNew=0;
         let id_cart;
-        const { product, quantity, userid } = req.body;        
-        const cart = await Cart.findOne({ userid: userid})           
+        const { product, quantity } = req.body;   
+        console.log(product+" - "+quantity);
+        /*const cart = await Cart.findOne({ userid: req.userid}) 
         if(!cart) {
             const payload = {                
-                ...req.body                
+                ...req.body,
+                userid: req.userId
             }
             console.log(payload);
             const cart = new Cart(payload);
             await cart.save()
-            return res.status(200).json({ message: "Carrito creado correctamente", cart})
-        }         
+            return res.status(200).json({ message: "Carrito creado correctamente", cart, tipoerror:'ok'})
+        } */        
         const productFoundInCart = await Cart.findOne({ product});        
         if(!productFoundInCart) {
             const payload = {                
-                ...req.body                
+                ...req.body,
+                //userid: req.userId                
             }            
             const cart = new Cart(payload);
             await cart.save()
-            return res.status(200).json({ message: "Producto Agregado al Carrito", cart})
+            return res.status(200).json({ message: "Producto Agregado al Carrito", cart, tipoerror:'ok'})
         }else{        
             const productFoundInCart = await Cart.find({ product});
             productFoundInCart.map((cartItem) =>{
@@ -31,13 +34,13 @@ const createCart = async (req, res) => {
                 id_cart=cartItem._id;
             })            
             const cartUpdate = await Cart.findByIdAndUpdate(id_cart,{ quantity: quantityNew }, { new: true });
-            const cartLeng = await Cart.findOne({ userid: userid}).count.length;
+            //const cartLeng = await Cart.findOne({ userid: userid}).count.length;
             
-            return res.status(200).json({ message: "Cantidad Modificada!!!", cartUpdate, cantProd: cartLeng});
+            return res.status(200).json({ message: "Cantidad Modificada!!!", cartUpdate, tipoerror:'ok'});
         }
         
     } catch (error) {
-        res.status(error.code || 500).json({ message: error.message })
+        res.status(error.code || 500).json({ message: error.message, tipoerror:'error' })
     }
 }
 
@@ -68,14 +71,12 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-const getCart = async (req, res) => {
-    console.log(req.userId);
+const getCart = async (req, res) => {    
     try {
         const cartFound = await Cart.find();
         if (!cartFound) {
             return res.status(400).json({ message: "El usuario no tiene carritos activos" })
-        }     
-        console.log(cartFound);
+        }                     
         return res.status(200).json({ message: "Carrito conseguidoexitosamente", cart: cartFound})
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message })        

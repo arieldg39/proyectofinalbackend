@@ -41,9 +41,18 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const featuredProducts = async(req, res) =>{
+  try {
+      const produtDes = await Product.find({hotItem: true}).select('stock');
+      res.status(200).json({ feature:produtDes });
+  } catch (error) {
+      res.status(error.code || 500).json({ message: error.message });
+  }
+}
 module.exports = {
   getProducts,
   addProduct,
   editProduct,
-  deleteProduct
+  deleteProduct,
+  featuredProducts
 };
