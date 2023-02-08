@@ -4,9 +4,9 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const ProductSchema = new Schema(
   {
     image: {
-      img1: String,
-      img2: String,
-      img3: String,
+      img1: Object,
+      img2: Object,
+      img3: Object,
     },
     name: {
       type: String,
