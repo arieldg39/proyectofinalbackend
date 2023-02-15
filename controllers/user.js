@@ -11,19 +11,14 @@ const addUser = async(req, res)=>{
         const payload = {
             ...req.body,
             password: encryptePass,
-            direccion: {
-                calle: "nada",
-                nro: "0",
-                dpto: "0",
-                barrio: "nada"
-            },
             ubicacion: {                
                 provincia: "nada",
                 localidad: "nada",
-                codigopostal: "0"                
+                codigopostal: 0,
+                direccion: "nada",
+                numeracion: 0,                
             }
         }  
-        
         const newUser = new User(payload);        
         await newUser.save();
         res.status(200).json({ message: 'Usuario Registrado Correctamente!!!', icon: 'success' });

@@ -7,38 +7,30 @@ const UserSchema = new Schema({
     apellido: {
         type: String
     },
-    direccion: {
-        calle: String,        
-        nro: String,        
-        dpto: String,        
-        barrio: String,        
-    },
-    ubicacion:{
+/*     ubicacion:{
         provincia: String,
         localidad: String,
-        codigopostal: String
-    },
+        codigopostal:Number,
+        direccion: String,
+        numeracion: Number,       
+    }, */
     email: {
         type: String
     },
     password: {
         type: String
     },
-    deleted: {
+/*     deleted: {
         type: Boolean,
         default: false,
     },
     type :{
         type: String,
     },
-    /*cart: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart"
-    },*/
     createAt: {
         type: Date,
         default: Date.now(),
-    },
+    }, */
 },{
     versionKey: false
 })
