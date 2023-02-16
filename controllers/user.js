@@ -15,13 +15,10 @@ const addUser = async(req, res)=>{
                 calle: "nada",
                 nro: "0",
                 dpto: "0",
-                barrio: "nada"
-            },
-            ubicacion: {                
                 provincia: "nada",
                 localidad: "nada",
                 codigopostal: "0"                
-            }
+            },            
         }  
         
         const newUser = new User(payload);        
@@ -60,7 +57,7 @@ const authUser =  async(req, res) =>{
 }
 const getUserData = async(req, res) =>{
     try {
-        const userFound = await User.findById(req.userId).select('-password -_id');
+        const userFound = await User.findById(req.userId).select('-password');
         res.status(200).json({ message: 'Usuario traido correctamente', user: userFound });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
@@ -84,9 +81,6 @@ const updateUser = async(req, res) =>{
                 calle: req.body?.calle ,
                 nro: req.body?.nro,
                 dpto: req.body?.dpto,
-                barrio: req.body?.barrio
-            },
-            ubicacion: {                
                 provincia: req.body?.provincia,
                 localidad: req.body?.localidad,
                 codigopostal: req.body?.codigopostal                
@@ -110,7 +104,7 @@ const sendEmailPassword = async(req, res) =>{
             }
         }
         console.log(payload);
-        jwt.sign(payload, process.env.SECRET_WORD, {expiresIn: '1h'}, (error, token)=>{
+        jwt.sign(payload, process.env.SECRET_WORD, {expiresIn: '5*60'}, (error, token)=>{
             if(error){
                 throw(error);
             }            

@@ -9,15 +9,12 @@ const UserSchema = new Schema({
     },
     direccion: {
         calle: String,        
-        nro: String,        
-        dpto: String,        
-        barrio: String,        
-    },
-    ubicacion:{
+        nro: Number,        
+        dpto: String,
         provincia: String,
         localidad: String,
         codigopostal: String
-    },
+    },    
     email: {
         type: String
     },
@@ -30,11 +27,7 @@ const UserSchema = new Schema({
     },
     type :{
         type: String,
-    },
-    /*cart: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Cart"
-    },*/
+    },    
     createAt: {
         type: Date,
         default: Date.now(),
