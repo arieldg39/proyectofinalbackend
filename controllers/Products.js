@@ -41,18 +41,18 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const hotItem = async(req, res) =>{
+const getHotItem = async (req, res) => {
   try {
-      const produtDes = await Product.find({hotItem: true}).select('stock');
-      res.status(200).json({ feature:produtDes });
+    const hotItem = await Product.find({ hotItem: "true" });
+    res.status(200).json({ hotItem });
   } catch (error) {
-      res.status(error.code || 500).json({ message: error.message });
+    res.status(error.code || 500).json({ message: error.message });
   }
-}
+};
 module.exports = {
   getProducts,
   addProduct,
   editProduct,
   deleteProduct,
-  hotItem
+  getHotItem
 };
