@@ -5,7 +5,6 @@ const createCart = async (req, res) => {
         let quantityNew=0;
         let id_cart;
         const { product, quantity, userid } = req.body;   
-        console.log(product+" - "+quantity+"- "+userid);
         const cart = await Cart.find({userid:req.userId})
         if(!cart) {
             const payload = {                
