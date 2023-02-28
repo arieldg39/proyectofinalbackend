@@ -5,7 +5,7 @@ const createCart = async (req, res) => {
         let quantityNew=0;
         let id_cart;
         const { product, quantity, userid } = req.body;   
-        const cart = await Cart.find({userid:req.userId})
+        const cart = await Cart.find({ userid: userId }).populate('product');
         if(!cart) {
             const payload = {                
                 ...req.body,
@@ -16,7 +16,7 @@ const createCart = async (req, res) => {
             await cart.save()
             return res.status(200).json({ message: "Carrito creado correctamente", cart, tipoerror:'agregado'})
         }         
-        const productFoundInCart = await Cart.findOne({ product});        
+        const productFoundInCart = await Cart.findOne({ product });        
         if(!productFoundInCart) {
             const payload = {                
                 ...req.body,                
@@ -41,6 +41,16 @@ const createCart = async (req, res) => {
         res.status(error.code || 500).json({ message: error.message, tipoerror:'error' })
     }
 }
+
+/* const addProductCart = async (req, res) =>{
+    try {
+        let quantityNew = 0;
+
+        const cart = await Cart.find({userid:req.userId})
+    } catch (error) {
+        
+    }
+} */
 
 const deleteProduct = async (req, res) => {
     try {
@@ -71,7 +81,7 @@ const deleteProduct = async (req, res) => {
 
 const getCart = async (req, res) => {    
     try {
-        const cartFound = await Cart.find({userid:req.userId});
+        const cartFound = await Cart.find({userid:req.userId}).populate('product');
         if (!cartFound) {
             return res.status(200).json({ message: "El usuario no tiene carritos activos" , tipoerror:"no"})
         }                     
