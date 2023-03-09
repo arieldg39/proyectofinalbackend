@@ -23,7 +23,7 @@ const addUser = async(req, res)=>{
         
         const newUser = new User(payload);        
         await newUser.save();
-        res.status(200).json({ message: 'Usuario Registrado Correctamente!!!', icon: 'success' });
+        res.status(200).json({ message: 'Usuario registrado exitosamente', icon: 'success' });
     } catch (error) {
         res.status(error.code || 500).json({message: error.message});
     }
@@ -32,9 +32,9 @@ const authUser =  async(req, res) =>{
     try {
         const {email, password} = req.body;
         const userFound = await User.findOne({email}).select('-__V');
-        if(!userFound) return res.status(400).json({message: "Email ingresado no esta Resgistrado, favor de Registarce!!!", icon: "error", tipoerror:"noregister"});
+        if(!userFound) return res.status(400).json({message: "El email ingresado no esta resgistrado en nuestra base de datos", icon: "error", tipoerror:"noregister"});
         const logInSucced = await bcryptjs.compare(password, userFound?.password);
-        if(!logInSucced) return res.status(400).json({message: "Datos ingresados son incorrecto!!!", icon: "error", tipoerror:"datosmal"});
+        if(!logInSucced) return res.status(400).json({message: "Los datos ingresados son incorrectos", icon: "error", tipoerror:"datosmal"});
         const userLogged = {
             nombre: userFound.nombre,
             email: userFound.email,
@@ -88,7 +88,7 @@ const updateUser = async(req, res) =>{
         }          
         console.log(req.userId);
         const updatedUser = await User.findByIdAndUpdate(req.userId, (userUpdate),{ new: true}).select('-password -deleted');
-        res.status(200).json({ message: 'Modificacion Realizada Correctamente!!!', user: updatedUser, icon:'success' });
+        res.status(200).json({ message: 'Los cambios fueron realizados exitosamente', user: updatedUser, icon:'success' });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message, icon:"error" });
     }
@@ -125,10 +125,10 @@ const sendEmailPassword = async(req, res) =>{
             
             transporter.sendMail(mailOptions, function(error, info){
                 if (error) {
-                    return res.status(400).json({message: "El Email fue enviado correctamente!!!" + error, icon: "success" });
+                    return res.status(400).json({message: "El Email fue enviado correctamente" + error, icon: "success" });
                     console.log(error);
                 } else {
-                    return res.status(200).json({message: "El Email fue enviado correctamente!!!", icon: "success" });
+                    return res.status(200).json({message: "El Email fue enviado correctamente", icon: "success" });
                     console.log('Correo enviado: ' + info.response);
                 }
             });     
@@ -145,7 +145,7 @@ const editPassword = async(req, res)=>{
         const salt = await bcryptjs.genSalt(10);
         const encryptePass = await bcryptjs.hash(password, salt);
         const UserUpdate= await User.findByIdAndUpdate(user.id, {password: encryptePass}, {new: true} ).select('-password');
-        return res.status(200).json({ message: 'Clave del Usuario '+ UserUpdate.name +' Modficada Correctamente!!!' })
+        return res.status(200).json({ message: 'La clave del usuario '+ UserUpdate.name +'fue modificada correctamente' })
     } catch (error) {
         if (error.message === 'jwt expired') return res.status(401).json({ message: 'Token expirado, por favor logearse nuevamente' });
     }
