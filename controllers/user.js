@@ -5,37 +5,13 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const { default: mongoose } = require("mongoose");
 
-// const addUser = async(req, res)=>{
-//     try {
-//         const salt = await bcryptjs.genSalt(10);
-//         const encryptedPass = await bcryptjs.hash(req.body.password, salt);
-//         const payload = {
-//             ...req.body,
-//             password: encryptePass,
-//             direccion: {
-//                 calle: "nada",
-//                 nro: "0",
-//                 dpto: "0",
-//                 provincia: "nada",
-//                 localidad: "nada",
-//                 codigopostal: "0"                
-//             },            
-//         }  
-//         const newUser = new User(payload);        
-//         await newUser.save();
-//         res.status(200).json({ message: 'Usuario registrado exitosamente', icon: 'success' });
-//     } catch (error) {
-//         res.status(error.code || 500).json({message: error.message});
-//     }
-// }
-
-const addUser = async (req, res) => {
+/* const addUser = async(req, res)=>{
     try {
         const salt = await bcryptjs.genSalt(10);
         const encryptedPass = await bcryptjs.hash(req.body.password, salt);
         const payload = {
-            nombre: req.body.nombre,
-            apellido: req.body.apellido,
+            ...req.body,
+            password: encryptedPass,
             direccion: {
                 calle: req.body.direccion.calle,
                 nro: req.body.direccion.nro,
@@ -63,13 +39,50 @@ const addUser = async (req, res) => {
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }
+} */
+
+const addUser = async (req, res) => {
+  try {
+    const salt = await bcryptjs.genSalt(10);
+    const encryptedPass = await bcryptjs.hash(req.body.password, salt);
+    const payload = {
+      nombre: req.body.nombre,
+      apellido: req.body.apellido,
+      direccion: {
+        calle: req.body.direccion.calle,
+        nro: req.body.direccion.nro,
+        dpto: req.body.direccion.dpto,
+        provincia: req.body.direccion.provincia,
+        localidad: req.body.direccion.localidad,
+        codigopostal: req.body.direccion.codigopostal
+      },
+      email: req.body.email,
+      password: encryptedPass,
+      cart: [],
+      deleted: false,
+      type: 'user',
+      createAt: new Date()
+    };
+
+    const newUser = new User({
+        ...payload,
+        cart: mongoose.Types.ObjectId()
+    });
+    await newUser.save();
+    res
+      .status(200)
+      .json({ message: 'Usuario Registrado Correctamente!!!', icon: 'success' });
+  } catch (error) {
+    res.status(error.code || 500).json({ message: error.message });
+  }
 };
 
-const authUser = async (req, res) => {
+
+const authUser =  async(req, res) =>{
     try {
-        const { email, password } = req.body;
-        const userFound = await User.findOne({ email }).select('-__V');
-        if (!userFound) return res.status(400).json({ message: "El email ingresado no esta resgistrado en nuestra base de datos", icon: "error", tipoerror: "noregister" });
+        const {email, password} = req.body;
+        const userFound = await User.findOne({email}).select('-__V');
+        if(!userFound) return res.status(400).json({message: "Email ingresado no esta Resgistrado, favor de registrse!!!", icon: "error", tipoerror:"noregister"});
         const logInSucced = await bcryptjs.compare(password, userFound?.password);
         if (!logInSucced) return res.status(400).json({ message: "Los datos ingresados son incorrectos", icon: "error", tipoerror: "datosmal" });
         const userLogged = {

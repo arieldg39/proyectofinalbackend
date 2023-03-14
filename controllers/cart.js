@@ -17,7 +17,8 @@ const Cart = require("../models/Cart");
 @@ -32,25 +31,77 @@ const createCart = async (req, res) => {
                 id_cart=cartItem._id;
             })            
-            const cartUpdate = await Cart.findByIdAndUpdate(id_cart,{ quantity: quantityNew }, { new: true });            
+            const cartUpdate = await Cart.findByIdAndUpdate(id_cart,{ quantity: quantityNew }, { new: true });
+            
             return res.status(200).json({ message: "Cantidad Modificada!!!", cartUpdate, tipoerror:'cantidad'});
         }
         
@@ -62,31 +63,32 @@ const Cart = require("../models/Cart");
     try {
       const { productId, quantity } = req.body;
       const { _id: userId } = req.user;
-
+  
       const user = await User.findById(userId).populate('cart');
       if (!user) {
         return res.status(404).json({ message: 'Usuario no encontrado' });
       }
-
+  
       const { cart } = user;
       const productFoundInCart = cart.products.find(
         (product) => product.product.toString() === productId
       );
-
+  
       if (!productFoundInCart) {
         cart.products.push({ product: productId, quantity });
       } else {
         productFoundInCart.quantity += quantity;
       }
-
+  
       await cart.save();
-
+  
       return res.status(200).json({ message: 'Producto agregado al carrito correctamente' });
     } catch (error) {
-        
       res.status(error.code || 500).json({ message: error.message });
     }
   };
+  
+  
 
 const deleteProduct = async (req, res) => {
     try {
@@ -131,6 +133,7 @@ const addToCart = async (req,res) =>{
         const { product, quantity } = req.body;
         const cart = await Cart.find({ userid: userId }).populate('product');
     } catch (error) {
+        
     }
 }
 

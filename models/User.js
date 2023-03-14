@@ -21,6 +21,10 @@ const UserSchema = new Schema({
     password: {
         type: String
     },
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cart',
+    },
     deleted: {
         type: Boolean,
         default: false,

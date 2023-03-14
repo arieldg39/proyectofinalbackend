@@ -1,13 +1,14 @@
 
 const User = require("../models/User");
 
-const createUsersValidations = async (req, res, next) => {
-    try {
-        const { password, email, nombre, apellido, direccion, repPassword } = req.body;
-        if (!password || !email || !nombre || !apellido || !direccion)
-            return res.status(400).json({ message: "Por favor completar todos los campos", tipoerror: "error" });
-        if (password != repPassword) {
-            return res.status(400).json({ message: "Las contraseñas ingresadas no coinciden", tipoerror: "error" });
+const createUsersValidations = async(req, res, next)=>{
+    try {        
+        const {password, email,  nombre, apellido, direccion,repPassword} = req.body;    
+        if(!password || !email || !nombre || !apellido || !direccion)
+        return res.status(400).json({message: "Completar los Datos", tipoerror: "error"});
+        
+        if(password!=repPassword){        
+            return res.status(400).json({message: "Las claves no son iguales", tipoerror: "error"});
         }
         const userFond = await User.findOne({ email });
         if (userFond) {
