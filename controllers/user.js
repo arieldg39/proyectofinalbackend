@@ -42,49 +42,49 @@ const { default: mongoose } = require("mongoose");
 } */
 
 const addUser = async (req, res) => {
-  try {
-    const salt = await bcryptjs.genSalt(10);
-    const encryptedPass = await bcryptjs.hash(req.body.password, salt);
-    const payload = {
-      nombre: req.body.nombre,
-      apellido: req.body.apellido,
-      direccion: {
-        calle: req.body.direccion.calle,
-        nro: req.body.direccion.nro,
-        dpto: req.body.direccion.dpto,
-        provincia: req.body.direccion.provincia,
-        localidad: req.body.direccion.localidad,
-        codigopostal: req.body.direccion.codigopostal
-      },
-      email: req.body.email,
-      password: encryptedPass,
-      cart: [],
-      deleted: false,
-      type: 'user',
-      createAt: new Date()
-    };
+    try {
+        const salt = await bcryptjs.genSalt(10);
+        const encryptedPass = await bcryptjs.hash(req.body.password, salt);
+        const payload = {
+            nombre: req.body.nombre,
+            apellido: req.body.apellido,
+            direccion: {
+                calle: req.body.direccion.calle,
+                nro: req.body.direccion.nro,
+                dpto: req.body.direccion.dpto,
+                provincia: req.body.direccion.provincia,
+                localidad: req.body.direccion.localidad,
+                codigopostal: req.body.direccion.codigopostal
+            },
+            email: req.body.email,
+            password: encryptedPass,
+            cart: [],
+            deleted: false,
+            type: 'user',
+            createAt: new Date()
+        };
 
-    const newUser = new User({
-        ...payload,
-        cart: mongoose.Types.ObjectId()
-    });
-    await newUser.save();
-    res
-      .status(200)
-      .json({ message: 'Usuario Registrado Correctamente!!!', icon: 'success' });
-  } catch (error) {
-    res.status(error.code || 500).json({ message: error.message });
-  }
+        const newUser = new User({
+            ...payload,
+            cart: mongoose.Types.ObjectId()
+        });
+        await newUser.save();
+        res
+            .status(200)
+            .json({ message: 'Usuario registrado correctamente', icon: 'success' });
+    } catch (error) {
+        res.status(error.code || 500).json({ message: error.message });
+    }
 };
 
 
-const authUser =  async(req, res) =>{
+const authUser = async (req, res) => {
     try {
-        const {email, password} = req.body;
-        const userFound = await User.findOne({email}).select('-__V');
-        if(!userFound) return res.status(400).json({message: "Email ingresado no esta Resgistrado, favor de registrse!!!", icon: "error", tipoerror:"noregister"});
+        const { email, password } = req.body;
+        const userFound = await User.findOne({ email }).select('-__V');
+        if (!userFound) return res.status(400).json({ message: "El email ingresado no se encuentra resgistrado. Para acceder, deberá crear una cuenta de usuario.", icon: "error", tipoerror: "noregister" });
         const logInSucced = await bcryptjs.compare(password, userFound?.password);
-        if (!logInSucced) return res.status(400).json({ message: "Los datos ingresados son incorrectos", icon: "error", tipoerror: "datosmal" });
+        if (!logInSucced) return res.status(400).json({ message: "Los datos ingresados son incorrectos.", icon: "error", tipoerror: "datosmal" });
         const userLogged = {
             nombre: userFound.nombre,
             email: userFound.email,
@@ -108,7 +108,7 @@ const authUser =  async(req, res) =>{
 const getUserData = async (req, res) => {
     try {
         const userFound = await User.findById(req.userId).select('-password');
-        res.status(200).json({ message: 'Usuario traido correctamente', user: userFound });
+        res.status(200).json({ message: 'Usuario encontrado exitosamente.', user: userFound });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }
@@ -116,7 +116,7 @@ const getUserData = async (req, res) => {
 const getUsers = async (req, res) => {
     try {
         const userFound = await User.find({ deleted: false }).select('-password');
-        res.status(200).json({ message: 'Usuario traido correctamente', user: userFound });
+        res.status(200).json({ message: 'Usuario encontrado exitosamente.', user: userFound });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }
@@ -138,7 +138,7 @@ const updateUser = async (req, res) => {
         }
         console.log(req.userId);
         const updatedUser = await User.findByIdAndUpdate(req.userId, (userUpdate), { new: true }).select('-password -deleted');
-        res.status(200).json({ message: 'Los cambios fueron realizados exitosamente', user: updatedUser, icon: 'success' });
+        res.status(200).json({ message: 'Los cambios fueron realizados exitosamente.', user: updatedUser, icon: 'success' });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message, icon: "error" });
     }
@@ -170,16 +170,14 @@ const sendEmailPassword = async (req, res) => {
                 from: 'E-Commer Administacion',
                 to: userFound.email,
                 subject: 'Recuperación de contraseña',
-                text: 'Hola,' + userFound.name + ' Para recuperar tu contraseña tiene 10 minutos, haz clic en el siguiente enlace: \nhttp://localhost:3000/EditPassword#' + token + '\n\nSaludos,\nEl equipo de E-coomer'
+                text: 'Hola,' + userFound.name + ' Para recuperar su contraseña tiene 10 minutos, haz clic en el siguiente enlace: \nhttp://localhost:3000/EditPassword#' + token + '\n\nSaludos,\nEl equipo de E-coomer'
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
-                    return res.status(400).json({ message: "El Email fue enviado correctamente" + error, icon: "success" });
-                    console.log(error);
+                    return res.status(400).json({ message: "El email fue enviado correctamente." + error, icon: "success" });
                 } else {
-                    return res.status(200).json({ message: "El Email fue enviado correctamente", icon: "success" });
-                    console.log('Correo enviado: ' + info.response);
+                    return res.status(200).json({ message: "El email fue enviado correctamente.", icon: "success" });
                 }
             });
         });

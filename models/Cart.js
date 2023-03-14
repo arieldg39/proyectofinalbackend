@@ -1,7 +1,7 @@
 const { model, Schema, default: mongoose } = require("mongoose");
 
 const CartSchema = new Schema({
-    user : {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
@@ -15,9 +15,7 @@ const CartSchema = new Schema({
     },
 }, {
     versionKey: false
-})
-
-
+});
 const Cart = model("Cart", CartSchema);
 
 module.exports = Cart;

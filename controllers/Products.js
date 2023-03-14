@@ -97,6 +97,7 @@ const getHotItem = async (req, res) => {
     res.status(error.code || 500).json({ message: error.message });
   }
 };
+
 module.exports = {
   getProducts,
   getfilteredProducts,
