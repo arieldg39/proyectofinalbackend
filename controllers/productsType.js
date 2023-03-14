@@ -24,7 +24,7 @@ const deleteTypes = async (req, res) => {
     try {
         const { id } = req.params;
         await ProductsType.deleteOne({ _id: id });
-        res.status(200).json({ message: 'Tipo de producto eliminado existosamente'});
+        res.status(200).json({ message: 'Tipo de producto eliminado existosamente' });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }

@@ -8,13 +8,13 @@ const UserSchema = new Schema({
         type: String
     },
     direccion: {
-        calle: String,        
-        nro: Number,        
+        calle: String,
+        nro: Number,
         dpto: String,
         provincia: String,
         localidad: String,
         codigopostal: String
-    },    
+    },
     email: {
         type: String
     },
@@ -25,14 +25,18 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    type :{
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cart',
+    },
+    type: {
         type: String,
-    },    
+    },
     createAt: {
         type: Date,
         default: Date.now(),
     },
-},{
+}, {
     versionKey: false
 })
 
