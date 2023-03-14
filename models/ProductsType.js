@@ -4,7 +4,7 @@ const ProductsTypeSchema = new Schema({
     type: {
         type: String,
     },
-},{
+}, {
     versionKey: false
 })
 

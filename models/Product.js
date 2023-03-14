@@ -7,8 +7,7 @@ const ProductSchema = new Schema(
       type: String,
       required: [true, 'El campo nombre es obligatorio'],
       trim: true,
-    }
-    ,
+    },
     image: {
       img1: Object,
       img2: Object,
@@ -58,5 +57,4 @@ const ProductSchema = new Schema(
 );
 
 ProductSchema.plugin(mongoosePaginate);
-
 module.exports = model('Product', ProductSchema);
