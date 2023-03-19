@@ -1,23 +1,27 @@
 const Product = require("../models/Product");
+const { buildQuery } = require("../helpers/productsHelpers");
 
 const getProducts = async (req, res) => {
   try {
-    const limit = req.query.limit || 15;
-    const page = req.query.page || 1;
-    const allProducts = await Product.paginate({}, { limit, page });
+    const { limit = 15, page = 1, category = "" } = req.query;
+    const skip = limit * (page - 1);
+    const query = await buildQuery(category);
+    const allProducts = await Product.find(query, {}, { skip, limit });
     res.send(allProducts);
   } catch (error) {
+    console.error(error);
     res.status(500).send(error);
   }
 };
-const getfilteredProducts = async (req, res) => {
-  try {
-    const allProducts = await Product.find();
-    res.send(allProducts);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-};
+
+// const getfilteredProducts = async (req, res) => {
+//   try {
+//     const allProducts = await Product.find();
+//     res.send(allProducts);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// };
 
 const getProduct = async (req, res) => {
   try {
@@ -100,7 +104,7 @@ const getHotItem = async (req, res) => {
 
 module.exports = {
   getProducts,
-  getfilteredProducts,
+  // getfilteredProducts,
   addProduct,
   editProduct,
   deleteProduct,
