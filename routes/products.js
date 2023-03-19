@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
   getProducts,
-  getfilteredProducts,
+  // getfilteredProducts,
   addProduct,
   editProduct,
   deleteProduct,
@@ -17,7 +17,7 @@ router.put("/editProducts/:id", editProduct);
 router.delete("/:id", deleteProductsMiddleware, deleteProduct);
 router.get("/getProduct/:id", getProduct);
 router.get("/products", getProducts);
-router.get("/filteredProducts", getfilteredProducts);
+// router.get("/filteredProducts", getfilteredProducts);
 
 
 module.exports = router;
