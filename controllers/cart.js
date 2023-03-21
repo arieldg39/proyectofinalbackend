@@ -1,4 +1,7 @@
 const Cart = require("../models/Cart");
+const User = require("../models/User")
+const Product = require("../models/Product")
+
 
 /* const createCart = async (req, res) => {
     try {
@@ -27,37 +30,31 @@ const Cart = require("../models/Cart");
     }
 } */
 
-/* const createCart = async (req, res) => {
+const addToCart = async (req, res) => {
     try {
-      const { product, quantity, userid } = req.body;
-  
-      // Busca un carrito existente del usuario que contenga el producto deseado
-      const cart = await Cart.findOne({ userid, product });
-  
-      if (!cart) {
-        // Si el carrito no existe, crea uno nuevo
-        const newCart = new Cart({
-          product,
-          quantity,
-          userid,
-        });
-  
-        await newCart.save();
-        return res.status(200).json({ message: "Carrito creado correctamente", cart: newCart, tipoerror:'agregado'});
-      } else {
-        // Si el carrito ya existe, actualiza su cantidad
-        const updatedCart = await Cart.findByIdAndUpdate(
-          cart._id,
-          { $inc: { quantity } },
-          { new: true }
-        );
-  
-        return res.status(200).json({ message: "Producto agregado al carrito", cart: updatedCart, tipoerror:'agregado' });
-      }
+        const { productId, quantity, userId } = req.body;
+        let cart = await Cart.findOne({ user: userId });
+        if (cart) {
+            const productIndex = cart.products.findIndex(product => product.product.toString() === productId);
+            if (productIndex !== -1) {
+                cart.products[productIndex].quantity += quantity;
+            } else {
+                cart.products.push({ product: productId, quantity });
+            }
+            cart = await cart.save();
+            return res.status(200).json({ message: "Producto agregado al carrito", cart });
+        } else {
+            const newCart = new Cart({
+                user: userId,
+                products: [{ product: productId, quantity }]
+            });
+            await newCart.save();
+            return res.status(200).json({ message: "Carrito creado correctamente", cart: newCart });
+        }
     } catch (error) {
-      res.status(error.code || 500).json({ message: error.message, tipoerror:'error' })
+        res.status(error.code || 500).json({ message: error.message })
     }
-  }; */
+};
 
 const createCart = async (req, res) => {
   try {
@@ -124,13 +121,37 @@ const getCart = async (req, res) => {
   }
 }
 
-const addToCart = async (req, res) => {
-  try {
-    const { product, quantity } = req.body;
-    const cart = await Cart.find({ userid: userId }).populate('product');
-  } catch (error) {
-  }
-}
+/* const addToCart = async (req, res) => {
+    const {userId, productId} = req.query
+    try {
+        const user = await User.findById(userId); // Buscar el usuario por su ObjectId
+            if (!user) {
+                return res.status(404).json({ message: "Usuario no encontrado" });
+            }
+        const product = await Product.findById(productId); // Buscar el producto por su ObjectId
+            if (!product) {
+                return res.status(404).json({ message: "Producto no encontrado" });
+            }
+      // Crear un nuevo documento de CartItem con la información del usuario, producto y cantidad
+        const cartItem = new CartItem({
+            cart: user.cart,
+            product: product._id,
+            quantity: 1 // Esta cantidad podría ser recibida como parámetro en la solicitud
+        });
+        await cartItem.save(); // Guardar el documento de CartItem en la base de datos
+      // Actualizar el carrito del usuario con el nuevo CartItem
+        user.cart.items.push(cartItem._id);
+        user.cart.totalQuantity += cartItem.quantity;
+        user.cart.totalPrice += cartItem.quantity * product.price;
+        await user.save();
+    
+        res.status(200).json({ message: "Producto agregado al carrito correctamente" });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Error al agregar el producto al carrito" });
+    }
+}; */
+
 
 module.exports = {
   createCart,

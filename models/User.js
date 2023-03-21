@@ -29,10 +29,6 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    cart: {
-        type: Schema.Types.ObjectId,
-        ref: 'Cart',
-    },
     type: {
         type: String,
     },
