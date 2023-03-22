@@ -1,45 +1,10 @@
 const User = require("../models/User");
+const Cart = require("../models/Cart")
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 const { default: mongoose } = require("mongoose");
-
-/* const addUser = async(req, res)=>{
-    try {
-        const salt = await bcryptjs.genSalt(10);
-        const encryptedPass = await bcryptjs.hash(req.body.password, salt);
-        const payload = {
-            ...req.body,
-            password: encryptedPass,
-            direccion: {
-                calle: req.body.direccion.calle,
-                nro: req.body.direccion.nro,
-                dpto: req.body.direccion.dpto,
-                provincia: req.body.direccion.provincia,
-                localidad: req.body.direccion.localidad,
-                codigopostal: req.body.direccion.codigopostal
-            },
-            email: req.body.email,
-            password: encryptedPass,
-            cart: [],
-            deleted: false,
-            type: 'user',
-            createAt: new Date()
-        };
-
-        const newUser = new User({
-            ...payload,
-            cart: mongoose.Types.ObjectId()
-        });
-        await newUser.save();
-        res
-            .status(200)
-            .json({ message: 'Usuario Registrado Correctamente.', icon: 'success' });
-    } catch (error) {
-        res.status(error.code || 500).json({ message: error.message });
-    }
-} */
 
 const addUser = async (req, res) => {
     try {
@@ -58,20 +23,20 @@ const addUser = async (req, res) => {
             },
             email: req.body.email,
             password: encryptedPass,
-            cart: [],
             deleted: false,
             type: 'user',
             createAt: new Date()
         };
-
+        const newCart = new Cart({
+            products: [],
+        });
+        await newCart.save();
         const newUser = new User({
             ...payload,
-            cart: mongoose.Types.ObjectId()
+            cart: newCart._id
         });
         await newUser.save();
-        res
-            .status(200)
-            .json({ message: 'Usuario registrado correctamente', icon: 'success' });
+        res.status(200).json({ message: 'Usuario registrado correctamente', icon: 'success' });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }
