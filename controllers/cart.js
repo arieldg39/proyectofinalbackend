@@ -1,3 +1,4 @@
+const path = require("path");
 const Cart = require("../models/Cart");
 const User = require("../models/User");
 
@@ -59,6 +60,33 @@ const addToCart = async (req, res) => {
         res.status(error.code || 500).json({ message: error.message });
     }
 };
+
+const addToCartMany = async (productId, quantity, userId) => {
+    try {
+      let cart = await Cart.findOne({ user: userId });
+      if (cart) {
+        const productIndex = cart.products.findIndex(
+          (product) => product.product.toString() === productId
+        );
+        if (productIndex !== -1) {
+          cart.products[productIndex].quantity += quantity;
+        } else {
+          cart.products.push({ product: productId, quantity });
+        }
+        cart = await cart.save();
+        return { message: "Producto agregado al carrito", cart };
+      } else {
+        const newCart = new Cart({
+          user: userId,
+          products: [{ product: productId, quantity }],
+        });
+        await newCart.save();
+        return { message: "Carrito creado correctamente", cart: newCart };
+      }
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
 
 const createCart = async (req, res) => {
     try {
@@ -128,9 +156,8 @@ const deleteProduct = async (req, res) => {
 
 const getCart = async (req, res) => {
     try {
-        const cartFound = await Cart.find({ userid: req.userId }).populate(
-            "product"
-        );
+        const { userId } = req;
+        const cartFound = await Cart.findOne({ user: userId }).populate("products.product");
         if (!cartFound) {
             return res.status(200).json({
                 message: "El usuario no tiene carritos activos",
@@ -147,9 +174,11 @@ const getCart = async (req, res) => {
     }
 };
 
+
 module.exports = {
     createCart,
     deleteProduct,
     getCart,
     addToCart,
+    addToCartMany,
 };

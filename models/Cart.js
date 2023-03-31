@@ -3,7 +3,7 @@ const { model, Schema, default: mongoose } = require("mongoose");
 const CartSchema = new Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "Users"
     },
     products: [
         {
@@ -18,7 +18,7 @@ const CartSchema = new Schema({
         }
     ]
     }, {
-        versionKey: false
+        versionKey: false,
     });
 
 const Cart = model("Cart", CartSchema);
