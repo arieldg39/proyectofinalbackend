@@ -14,15 +14,6 @@ const getProducts = async (req, res) => {
   }
 };
 
-// const getfilteredProducts = async (req, res) => {
-//   try {
-//     const allProducts = await Product.find();
-//     res.send(allProducts);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
-
 const getProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -104,7 +95,6 @@ const getHotItem = async (req, res) => {
 
 module.exports = {
   getProducts,
-  // getfilteredProducts,
   addProduct,
   editProduct,
   deleteProduct,
