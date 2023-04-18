@@ -1,7 +1,7 @@
 const express = require("express");
 const { decoToken } = require("../middlewares/auth");
 const router = express.Router();
-const { createCart, deleteProduct, getCart, addToCart, addToCartMany } = require("./../controllers/cart");
+const { createCart, deleteProduct, getCart, addToCart } = require("./../controllers/cart");
 const { checkProductStock } = require("../middlewares/products");
 
 router.post("/createCart", createCart);
