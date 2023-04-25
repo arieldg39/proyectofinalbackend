@@ -36,7 +36,7 @@ const ProductSchema = new Schema(
     },
     hotItem: {
       type: String,
-      required: [true, 'El campo destacados es obligatorio'],
+      required: false,
       trim: true,
     },
     stock: {

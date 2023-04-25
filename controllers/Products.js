@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const ProductsType = require("../models/ProductsType")
 const { buildQuery } = require("../helpers/productsHelpers");
 
 const getProducts = async (req, res) => {
@@ -26,7 +27,7 @@ const getProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { name, brand, price, image, hotItem, stock, type } = req.body;
+    const { name, brand, price, image, stock, type } = req.body;
     if (!type)
       return res.status(400).json({ message: "El campo type es requerido" });
     if (!name)
@@ -37,10 +38,6 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ message: "El campo price es requerido" });
     if (!image)
       return res.status(400).json({ message: "El campo image es requerido" });
-    if (!hotItem)
-      return res
-        .status(400)
-        .json({ message: "El campo hot item es requerido" });
     if (!stock)
       return res.status(400).json({ message: "El campo stock es requerido" });
     const typeFound = await ProductsType.findOne({ type });
@@ -59,16 +56,13 @@ const addProduct = async (req, res) => {
 const editProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const type = await ProductsType.findOne({ type: req.body.type });
     const updatedProduct = await Product.findByIdAndUpdate(id, {
-      ...req.body,
-      type: type._id,
+      ...req.body
     });
     res.status(200).json({
       message: "Producto actualizado correctamente",
       product: updatedProduct,
     });
-
   } catch (error) {
     res.status(error.code || 500).json({ message: error.message });
   }
@@ -76,7 +70,7 @@ const editProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id } = req.params;
     await Product.deleteOne({ _id: id });
     res.status(200).json({ message: "Producto borrado exitosamente" });
   } catch (error) {

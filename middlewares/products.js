@@ -3,7 +3,7 @@ const Cart = require("../models/Cart")
 
 const deleteProductsMiddleware = async (req, res, next) => {
     try {
-        const id = req.body.id;
+        const { id } = req.params;
         if (!id) return res.status(400).json({ message: "El parametro id es requerido" });
         const Product = await product.findById(id);
         if (!Product) return res.status(400).json({ message: "El id ingresado es inexistente" });

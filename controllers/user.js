@@ -81,14 +81,13 @@ const getUserData = async (req, res) => {
 const getUsers = async (req, res) => {
     try {
         const userFound = await User.find({ deleted: false }).select('-password');
-        res.status(200).json({ message: 'Usuario encontrado exitosamente.', user: userFound });
+        res.status(200).json({ message: 'Usuarios encontrados exitosamente.', user: userFound });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }
 }
 const updateUser = async (req, res) => {
     try {
-        console.log(req.body?.calle);
         const userUpdate = {
             nombre: req.body?.nombre,
             apellido: req.body?.apellido,
@@ -101,13 +100,38 @@ const updateUser = async (req, res) => {
                 codigopostal: req.body?.codigopostal
             }
         }
-        console.log(req.userId);
         const updatedUser = await User.findByIdAndUpdate(req.userId, (userUpdate), { new: true }).select('-password -deleted');
         res.status(200).json({ message: 'Los cambios fueron realizados exitosamente.', user: updatedUser, icon: 'success' });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message, icon: "error" });
     }
 }
+
+const editUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updatedUser = await User.findByIdAndUpdate(id, {
+        ...req.body
+      });
+      res.status(200).json({
+        message: "Usuario actualizado correctamente",
+        user: updatedUser,
+      });
+    } catch (error) {
+      res.status(error.code || 500).json({ message: error.message });
+    }
+  };
+
+  const deleteUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      await User.deleteOne({ _id: id });
+      res.status(200).json({ message: "Usuario borrado exitosamente" });
+    } catch (error) {
+      res.status(error.code || 500).json({ message: error.message });
+    }
+  };
+
 const sendEmailPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -170,5 +194,7 @@ module.exports = {
     updateUser,
     sendEmailPassword,
     editPassword,
-    getUserData
+    getUserData,
+    editUser,
+    deleteUser
 }

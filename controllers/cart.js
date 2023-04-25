@@ -88,35 +88,28 @@ const createCart = async (req, res) => {
     }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteProductFromCart = async (req, res) => {
   try {
-    const { productId, userId } = req.body;
-    const cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "El carrito no existe" });
-    }
-
-    const productIndex = cart.products.findIndex(
-      (product) => product.product.toString() === productId
-    );
-
-    if (productIndex !== -1) {
-      cart.products.splice(productIndex, 1);
-      await cart.save();
-      return res
-        .status(200)
-        .json({ message: "Producto eliminado del carrito", cart });
-    } else {
-      return res
-        .status(404)
-        .json({ message: "El producto no se encuentra en el carrito" });
-    }
+      const { userId } = req;
+      const { productId } = req.body
+      const cartFound = await Cart.findOne({ user: userId })
+      if (!cartFound) {
+          return res.status(200).json({
+              message: "El usuario no tiene carritos activos",
+              tipoerror: "no",
+          });
+      }
+      const newProductList = cartFound?.products?.filter((product) => product._id.toString() !== productId)
+      const cartUpdated = await Cart.findOneAndUpdate({ user: userId }, { products: newProductList })
+      return res.status(200).json({
+          message: "Producto eliminado correctamente",
+          cart: cartUpdated,
+          tipoerror: "si",
+      });
   } catch (error) {
-    res.status(error.code || 500).json({ message: error.message });
+      res.status(error.code || 500).json({ message: error.message });
   }
-};
-
+}
 
 const getCart = async (req, res) => {
     try {
@@ -141,7 +134,7 @@ const getCart = async (req, res) => {
 
 module.exports = {
     createCart,
-    deleteProduct,
+    deleteProductFromCart,
     getCart,
     addToCart
 };
