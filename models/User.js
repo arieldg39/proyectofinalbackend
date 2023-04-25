@@ -1,8 +1,19 @@
-const { model, Schema } = require('mongoose');
+const { model, Schema, default: mongoose } = require('mongoose');
 
 const UserSchema = new Schema({
-    name: {
+    nombre: {
         type: String
+    },
+    apellido: {
+        type: String
+    },
+    direccion: {
+        calle: String,
+        nro: Number,
+        dpto: String,
+        provincia: String,
+        localidad: String,
+        codigopostal: String
     },
     email: {
         type: String
@@ -10,22 +21,22 @@ const UserSchema = new Schema({
     password: {
         type: String
     },
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cart',
+    },
     deleted: {
         type: Boolean,
         default: false,
     },
-    type :{
+    type: {
         type: String,
-    },
-    walletBalance: {
-        type: Number,
-        default: 0,
     },
     createAt: {
         type: Date,
         default: Date.now(),
     },
-},{
+}, {
     versionKey: false
 })
 
