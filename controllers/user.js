@@ -27,14 +27,19 @@ const addUser = async (req, res) => {
             type: 'user',
             createAt: new Date()
         };
-        const newCart = new Cart({
-            products: [],
-        });
-        await newCart.save();
+        
         const newUser = new User({
-            ...payload,
-            cart: newCart._id
+            ...payload
+        });          
+        await newUser.save();
+
+        const newCart = new Cart({
+            user: newUser._id,
+            products: []
         });
+        await newCart.save();        
+        
+        newUser.cart = newCart._id;
         await newUser.save();
         res.status(200).json({ message: 'Usuario registrado correctamente', icon: 'success' });
     } catch (error) {
@@ -136,13 +141,11 @@ const sendEmailPassword = async (req, res) => {
     try {
         const { email } = req.body;
         const userFound = await User.findOne({ email }).select('-__V');
-        console.log(userFound);
         const payload = {
             user: {
                 id: userFound._id,
             }
         }
-        console.log(payload);
         jwt.sign(payload, process.env.SECRET_WORD, { expiresIn: '5*60' }, (error, token) => {
             if (error) {
                 throw (error);
