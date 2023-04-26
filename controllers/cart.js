@@ -47,11 +47,10 @@ const addToCart = async (req, res) => {
           const newCart = new Cart({
             user: userId,
             products: [{ product: productId, quantity }],
-          });
-          await newCart.save();
-          return res
-            .status(200)
-            .json({ message: "Carrito creado correctamente", cart: newCart });
+        });
+          const savedCart = await newCart.save();
+          const updatedUser = await User.findByIdAndUpdate(userId, { cart: savedCart._id }, { new: true });
+          return res.status(200).json({ message: "Carrito creado correctamente", cart: savedCart });        
         }
       }
     } catch (error) {
@@ -59,30 +58,25 @@ const addToCart = async (req, res) => {
     }
   };
 
-const createCart = async (req, res) => {
+  const buyCart = async (req, res) => {
     try {
-        const { productId, quantity } = req.body;
-        const { _id: userId } = req.user;
-
-        const user = await User.findById(userId).populate("cart");
-        if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
+        const { userId } = req.body;
+        const cartFound = await Cart
+            .findOne({ user: userId })
+            .populate("products.product");
+        if (!cartFound) {
+            return res.status(200).json({
+                message: "El usuario no tiene carritos activos",
+                tipoerror: "no",
+            });
         }
-
-        const { cart } = user;
-        const productFoundInCart = cart.products.find(
-            (product) => product.product.toString() === productId
-        );
-
-        if (!productFoundInCart) {
-            cart.products.push({ product: productId, quantity });
-        } else {
-            productFoundInCart.quantity += quantity;
-        }
-        await cart.save();
-        return res
-            .status(200)
-            .json({ message: "Producto agregado al carrito correctamente" });
+        cartFound.products = [];
+        const updatedCart = await Cart
+            .findByIdAndUpdate(cartFound._id, cartFound, { new: true });
+        return res.status(200).json({
+            message: "Compra realizada exitosamente",
+            tipoerror: "si",
+        });
     } catch (error) {
         res.status(error.code || 500).json({ message: error.message });
     }
@@ -133,7 +127,7 @@ const getCart = async (req, res) => {
 
 
 module.exports = {
-    createCart,
+    buyCart,
     deleteProductFromCart,
     getCart,
     addToCart
